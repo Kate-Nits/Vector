@@ -203,12 +203,13 @@ public:
 		if (is_full()) {
 			reserve(_capacity + RESERVE_MEMORY);
 		}
-		for (size_t i = _size; i > index; --i) { // Сдвигаем вправо
+		size_t real_index = check_index(index);
+		for (size_t i = _size; i > real_index; --i) { // Сдвигаем вправо
 			_data[i] = _data[i - 1];
 			_states[i] = _states[i - 1];
 		}
-		_data[index] = value;
-		_states[index] = busy;
+		_data[real_index] = value;
+		_states[real_index] = busy;
 		++_size;
 	}
 
