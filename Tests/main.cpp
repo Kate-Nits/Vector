@@ -627,6 +627,14 @@ bool test_37_erase_with_shrink_to_fit() {
         && TestSystem::check(expected_result_size, actual_result_size);
 }
 
+bool test_38_check_function_check_index() {
+    int copy_mass[9] = { 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    TVector<int> vec(copy_mass, 9);
+    vec.erase(3);
+    State actual_result = vec.state(3);
+    State expected_result = State::busy;
+    return TestSystem::check(expected_result, actual_result);
+}
 
 
 
@@ -682,7 +690,7 @@ int main() {
     TestSystem::start_test(test_35_insert_out_of_range, " check function insert_out_of_range");
     TestSystem::start_test(test_36_pop_front_with_shrink_to_fit, " check function pop_front_with_shrink_to_fit");
     TestSystem::start_test(test_37_erase_with_shrink_to_fit, " check function erase_with_shrink_to_fit");
-
+    TestSystem::start_test(test_38_check_function_check_index, "check new realization check_index");
 
 
     TestSystem::print_final_info();

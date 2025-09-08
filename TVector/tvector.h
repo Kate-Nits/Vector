@@ -29,6 +29,7 @@ public:
 		}
 	}
 	TVector(T* data, size_t size) { //конструктор созданный на основе переаного массива данных 
+									//если передаем массив мы же можем сами размер посчитать, может не нужно у пользователя просить размер???????????????????
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -89,13 +90,21 @@ public:
 	}
 
 	inline T& operator[](size_t index) {
-		check_index(index); //////////////////////
-		return _data[index];
+		
+		//check_index(index); //////////////////////
+
+		size_t real_index = check_index(index);
+
+		return _data[real_index];
+	}
+	inline const T& operator[](size_t index) {
+		size_t real_index = check_index(index);
+		return _data[real_index];
 	}
 
 	inline T& at(size_t index) {
-		check_index(index);
-		return _data[index];
+		size_t real_index = check_index(index);
+		return _data[real_index];
 	}
 
 
@@ -493,7 +502,7 @@ private:
 			throw std::out_of_range("Accessing element that is not active (deleted or empty)");
 		}
 	}*/
-	void check_index(size_t index) const {
+	/*void check_index(size_t index) const {
 		if (index >= _size) {
 			throw std::out_of_range("Index out of bounds: index >= size");
 		}
@@ -507,8 +516,22 @@ private:
 			}
 		}
 		throw std::out_of_range("There no element with this index");
+	}*/
+	size_t check_index(size_t index) const {
+		if (index >= _size) {
+			throw std::out_of_range("Index out of bounds: index >= size");
+		}
+		size_t count = 0;
+		for (size_t i = 0; i < _size; i++) {
+			if (_states[i] == State::busy) {
+				if (count == index) {
+					return i;
+				}
+				count++;
+			}
+		}
+		throw std::out_of_range("There no element with this index");
 	}
-
 	inline bool is_full() const noexcept { //функция проверки на заполненость
 		return _size >= _capacity;
 	}
