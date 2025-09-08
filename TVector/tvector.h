@@ -97,7 +97,7 @@ public:
 
 		return _data[real_index];
 	}
-	inline const T& operator[](size_t index) {
+	inline const T& operator[](size_t index) const {
 		size_t real_index = check_index(index);
 		return _data[real_index];
 	}
@@ -106,23 +106,26 @@ public:
 		size_t real_index = check_index(index);
 		return _data[real_index];
 	}
-
+	inline const T& at(size_t index) const {
+		size_t real_index = check_index(index);
+		return _data[real_index];
+	}
 
 	inline const T* data() const noexcept {
 		return _data;
 	}
 
-	inline const T data(size_t i) const {
-		check_index(i);
-		return _data[i];
+	inline const T data(size_t i) const { //оставить может надо было оставить реальность а не то что должен видеть пользователь???
+		size_t real_index = check_index(i);
+		return _data[real_index];
 	}
 
 	inline const State* states() const noexcept {
 		return _states;
 	}
-	inline const State state(size_t i) const {
-		check_index(i); //Не полетит ли проверка после моего исправления 6.09???????????????
-		return _states[i];
+	inline const State state(size_t i) const {//Cпроси что именно мы смотрим используя эту функцию (пользовательскую или программисткую часть?)
+		size_t real_index = check_index(i); //Не полетит ли проверка после моего исправления 6.09???????????????
+		return _states[real_index];
 	}
 
 
@@ -244,8 +247,8 @@ public:
 		throw std::underflow_error("Vector is empty");
 	}
 	void erase(size_t index) {
-		check_index(index);
-		_states[index] = State::deleted;
+		size_t real_index = check_index(index);
+		_states[real_index] = State::deleted;
 		++_deleted;
 		if (_size > 0 && ((_deleted * 100 / _size) > MAX_PERCENT_DELETED)) {
 			shrink_to_fit();
@@ -267,9 +270,9 @@ public:
 		++_size;
 	}*/
 	void emplace(size_t index, T&& value) {
-		check_index(index);
-		_data[index] = value;
-		_states[index] = State::busy;
+		size_t real_index = check_index(index);
+		_data[real_index] = value;
+		_states[real_index] = State::busy;
 	}
 
 	TVector<T>& assign(const TVector<T>& other) {
