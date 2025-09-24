@@ -1,8 +1,8 @@
 ﻿  main.cpp
 D:\programming_Kate\OOP_Project\Tests\main.cpp(450,34): warning C4101: 'ex': unreferenced local variable
-D:\programming_Kate\OOP_Project\TVector\tvector.h(544,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
+D:\programming_Kate\OOP_Project\TVector\tvector.h(542,45): warning C4267: 'argument': conversion from 'size_t' to 'int', possible loss of data
   (compiling source file 'main.cpp')
-      D:\programming_Kate\OOP_Project\TVector\tvector.h(544,45):
+      D:\programming_Kate\OOP_Project\TVector\tvector.h(542,45):
       the template instantiation context (the oldest one first) is
           D:\programming_Kate\OOP_Project\Tests\main.cpp(498,5):
           see reference to function template instantiation 'void quick_sort<int>(TVector<int> &)' being compiled

@@ -52,7 +52,6 @@ public:
 				_states[i] = State::empty;
 			}
 		}
-
 	}
 	TVector(const TVector<T>& other) { // конструктор копирования
 		_size = other._size;
@@ -245,7 +244,6 @@ public:
 	}
 
 	//замена значения
-
 	void emplace(size_t index, T&& value) {
 		size_t real_index = check_index(index);
 		_data[real_index] = value;
