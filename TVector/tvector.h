@@ -29,7 +29,6 @@ public:
 		}
 	}
 	TVector(T* data, size_t size) { //конструктор созданный на основе переаного массива данных 
-									//если передаем массив мы же можем сами размер посчитать, может не нужно у пользователя просить размер???????????????????
 		_size = size;
 		_capacity = size + RESERVE_MEMORY;
 		_deleted = 0;
@@ -90,16 +89,10 @@ public:
 	}
 
 	inline T& operator[](size_t index) {
-		
-		//check_index(index); //////////////////////
-
-		size_t real_index = check_index(index);
-
-		return _data[real_index];
+		return _data[index];
 	}
 	inline const T& operator[](size_t index) const {
-		size_t real_index = check_index(index);
-		return _data[real_index];
+		return _data[index];
 	}
 
 	inline T& at(size_t index) {
@@ -115,7 +108,7 @@ public:
 		return _data;
 	}
 
-	inline const T data(size_t i) const { //оставить может надо было оставить реальность а не то что должен видеть пользователь???
+	inline const T& data(size_t i) const {
 		size_t real_index = check_index(i);
 		return _data[real_index];
 	}
@@ -123,11 +116,10 @@ public:
 	inline const State* states() const noexcept {
 		return _states;
 	}
-	inline const State state(size_t i) const {//Cпроси что именно мы смотрим используя эту функцию (пользовательскую или программисткую часть?)
-		size_t real_index = check_index(i); //Не полетит ли проверка после моего исправления 6.09???????????????
-		return _states[real_index];
-	}
 
+	inline const State state(size_t i) const {
+		return _states[i];
+	}
 
 	inline const size_t size() const noexcept {//get
 		return _size;
@@ -143,15 +135,12 @@ public:
 		reserve(new_capacity);
 	}
 
-
-
 	inline T* begin() noexcept { // возвращает _data указатель на начало
 		return _data;
 	}
 	inline T* end() noexcept {
 		return _data + _size;
 	}
-
 
 	inline const size_t deleted() const noexcept {
 		return _deleted;
@@ -170,7 +159,6 @@ public:
 				return _data[i];
 		throw std::out_of_range("No busy elements in vector");
 	}
-
 
 	inline bool is_empty() const noexcept { return _size == 0 || (_size - _deleted == 0); } //функция проверки на пустоту
 
@@ -257,19 +245,7 @@ public:
 	}
 
 	//замена значения
-	/*void emplace(size_t index, T&& value) { //со сдвигом
-		check_index(index);
-		if (is_full()) {
-			reserve(_capacity + RESERVE_MEMORY);
-		}
-		for (size_t i = _size; i > index; --i) {
-			_data[i] = _data[i - 1];
-			_states[i] = _states[i - 1];
-		}
-		_data[index] = value;
-		_states[index] = State::busy;
-		++_size;
-	}*/
+
 	void emplace(size_t index, T&& value) {
 		size_t real_index = check_index(index);
 		_data[real_index] = value;
@@ -297,7 +273,7 @@ public:
 		return *this;
 	}
 
-	TVector<T>& operator=(const TVector<T>& other) noexcept {
+	TVector<T>& operator=(const TVector<T>& other) {
 		if (this != &other) { //проверка на самоприсваивание
 			delete[] _data;
 			delete[] _states;
@@ -357,7 +333,6 @@ public:
 		return false;
 	}
 
-
 	void reserve(size_t new_capacity) { //увеличивает _capacity
 		if (new_capacity <= _capacity) return;
 
@@ -404,10 +379,7 @@ public:
 	}
 
 	void resize(size_t new_size, const T& value) {
-		if (new_size == _size) {
-			return;
-		}
-
+		if (new_size == _size) { return; }
 		if (new_size < _size) {
 			for (size_t i = new_size; i < _size; ++i) {
 				if (_states[i] == deleted)
@@ -418,11 +390,9 @@ public:
 			_size = new_size;
 			return;
 		}
-
 		if (new_size > _capacity) {
 			reserve(new_size + RESERVE_MEMORY);
 		}
-
 		for (size_t i = _size; i < new_size; ++i) {
 			new (_data + i) T(value); //размещает результат в уже выделенной памяти по адресу _data + i
 			_states[i] = busy;
@@ -432,14 +402,11 @@ public:
 
 	void shrink_to_fit() { //уменьшение размера, удаляя неиспользуемую память
 		size_t busy_count = 0;
-
 		for (size_t i = 0; i < _size; ++i) { // Считаем busy элементы
 			if (_states[i] == busy)
 				++busy_count;
 		}
-
-		if (busy_count == _size && _capacity == _size)
-			return;
+		if (busy_count == _size && _capacity == _size) { return; }
 
 		size_t new_capacity = busy_count + RESERVE_MEMORY;
 		T* new_data = new T[new_capacity];
@@ -477,50 +444,33 @@ public:
 		}
 		std::cout << "]";
 	}
+
 	template <class U>
 	friend std::ostream& operator<<(std::ostream& out, const TVector<U>& vec);
 
-
 	template <typename U>
 	friend void swap(U& a, U& b);
+
 	template <typename U>
 	friend void shuffle(TVector<U>& vec);
+
 	template <typename U>
 	friend void quick_sort(TVector<U>& vec);
+
 	template <typename U>
 	friend size_t find_first(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend size_t find_last(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend size_t* find_all(const TVector<U>& vec, const U& value);
+
 	template <typename U>
 	friend void quick_sort_realisation(TVector<U>& vec, int left, int right);
 
 private:
 
-	/*void check_index(size_t index) const { //версия до 6.09 (после правок Марины Андреевны
-		if (index >= _size) {
-			throw std::out_of_range("Index out of bounds: index >= size");
-		}
-		if (_states[index] != State::busy) {
-			throw std::out_of_range("Accessing element that is not active (deleted or empty)");
-		}
-	}*/
-	/*void check_index(size_t index) const {
-		if (index >= _size) {
-			throw std::out_of_range("Index out of bounds: index >= size");
-		}
-		size_t count = 0;
-		for (size_t i = 0; i < _size; i++) {
-			if (_states[i] == State::busy) {
-				if (count == index) {
-					return;
-				}
-				count++;
-			}
-		}
-		throw std::out_of_range("There no element with this index");
-	}*/
 	size_t check_index(size_t index) const {
 		if (index >= _size) {
 			throw std::out_of_range("Index out of bounds: index >= size");
@@ -541,7 +491,6 @@ private:
 	}
 	template <class>
 	friend class TVectorTester;
-
 };
 
 template <typename T>
@@ -567,33 +516,6 @@ void shuffle(TVector<T>& vec) {
 		swap(vec._data[i], vec._data[j]);
 	}
 }
-
-/*
-template <typename T>
-int partition(TVector<T>& vec, int left, int right) {
-	T p = vec._data[right];
-	int i = left - 1;
-
-	for (int j = left; j < right; ++j) {
-		if (vec._states[j] == busy && vec._data[j] <= p) {
-			++i;
-			swap(vec._data[i], vec._data[j]);
-		}
-	}
-	swap(vec._data[i + 1], vec._data[right]);
-	return i + 1;
-}
-
-template <class T>
-void quick_sort_realisation(TVector<T>& vec, int left, int right) {
-	if (left < right) {
-		int p = partition(vec, left, right);
-		quick_sort_realisation(vec, left, p - 1);
-		quick_sort_realisation(vec, p + 1, right);
-	}
-}
-*/
-
 
 template <class T>
 void quick_sort_realisation(TVector<T>& vec, int left, int right) {
@@ -641,7 +563,6 @@ size_t find_last(const TVector<T>& vec, const T& value) {
 template <class T>
 size_t* find_all(const TVector<T>& vec, const T& value) {
 	size_t result_size = 0;
-
 	for (size_t i = 0; i < vec.size(); ++i) { // Считаем количество подходящих элементов
 		if (vec.state(i) == State::busy && vec.data(i) == value) {
 			++result_size;
