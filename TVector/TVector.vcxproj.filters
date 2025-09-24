@@ -15,11 +15,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="tvector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+=======
+>>>>>>> fixing_work_with_indexes_in_all_functions
     <ClInclude Include="tvector.h">
       <Filter>Header Files</Filter>
     </ClInclude>

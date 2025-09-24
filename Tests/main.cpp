@@ -5,7 +5,10 @@
 #include "tvector.h"
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> fixing_work_with_indexes_in_all_functions
 void set_color(int text_color, int bg_color) {
     HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     SetConsoleTextAttribute(hConsole, (bg_color << 4) | text_color);
@@ -683,8 +686,11 @@ int main() {
     TestSystem::start_test(test_36_pop_front_with_shrink_to_fit, " check function pop_front_with_shrink_to_fit");
     TestSystem::start_test(test_37_erase_with_shrink_to_fit, " check function erase_with_shrink_to_fit");
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> fixing_work_with_indexes_in_all_functions
     TestSystem::print_final_info();
     system("pause");
     return 0;

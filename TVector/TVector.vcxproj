@@ -127,9 +127,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <ClCompile Include="tvector.cpp" />
   </ItemGroup>
   <ItemGroup>
+=======
+>>>>>>> fixing_work_with_indexes_in_all_functions
     <ClInclude Include="tvector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
